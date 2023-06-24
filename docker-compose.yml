@@ -1,0 +1,12 @@
+version: '3'
+services:
+  php:
+    build:
+      args:
+        user: arthurai
+        uid: 1000
+      context: ./
+      dockerfile: ./Dockerfile
+    working_dir: /home/arthurai/code
+    volumes:
+      - .:/home/arthurai/code
