@@ -19,8 +19,17 @@
         "nyholm/psr7": "^1.8",
         "guzzlehttp/guzzle": "^7.7",
         "symfony/dotenv": "^6.3",
-        "symfony/console": "^6.3"
+        "symfony/console": "^6.3",
+        "kambo/langchain": "dev-feature/openai-php-client-v.0.6"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/meltir/langchain-php"
+        }
+    ],
     "config": {
         "allow-plugins": {
             "php-http/discovery": true
