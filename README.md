@@ -18,6 +18,7 @@ Why ?
 The bulk of the training [data](./data/raw) came from here: https://sherlock-holm.es/ (maintained by Christoph Ender).
 
 @todo implement a real vector store for langchain (just dump the sqlite to file and import again, store hashes to help with re-generating them)  
-@todo later do a psr cache interface so people can fuck about with redis/sql/others
-@switch to using my forked version with latest openapi lib
+@todo later do a psr cache interface so people can fuck about with redis/sql/others    
+~~@switch to using my forked version with latest openapi lib~~
+
 
