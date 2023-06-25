@@ -4,14 +4,50 @@
 
 require __DIR__.'/vendor/autoload.php';
 
+use Kambo\Langchain\DocumentLoaders\TextLoader;
+use Kambo\Langchain\Indexes\VectorstoreIndexCreator;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Dotenv\Dotenv;
+use Kambo\Langchain\LLMs\OpenAI;
 
 $dotenv = new Dotenv();
-$dotenv->load(__DIR__.'/.env', __DIR__.'/.env.local');
+$dotenv->usePutenv(true);
+$dotenv->loadEnv(__DIR__.'/.env');
 
 $application = new Application();
 
 // ... register commands
+$application->register('expensive-chat-mvp')
+    ->setCode(function (InputInterface $input, OutputInterface $output): int {
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('You are about to burn some API credits for a one-off, are you sure ? (y/n)', false);
 
+        if (!$helper->ask($input, $output, $question)) {
+            $output->writeln('... :( ... exiting ...');
+            return Command::SUCCESS;
+        }
+
+        $loader = new TextLoader(__DIR__ . '/data/raw/'. 'veil.txt');
+        $index  = (new VectorstoreIndexCreator())->fromLoaders([$loader]);
+        $openAi = new OpenAI(['temperature' => 0]);
+
+        $queries = [
+            "Who was Mrs Ronder ?",
+            "What happened to Mrs Ronder's face ?",
+            "Who else was there when Mr Ronder was killed ?"
+        ];
+
+        foreach ($queries as $query) {
+            $query = "Question: $query";
+            $output->writeln($query);
+            $output->writeln($index->query($query, $openAi));
+        }
+
+
+        return Command::SUCCESS;
+    });
 $application->run();
